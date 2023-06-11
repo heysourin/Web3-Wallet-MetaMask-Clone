@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { generateKeys } from "../../utils/AccountUtils";
+import { generateAccount } from "../../utils/AccountUtils";
+import AccountDetails from "./AccountDetails";
 
-interface AccountData {
-  seedPhrase: string;
+interface Account {
   privateKey: string;
   address: string;
+  balance: string;
 }
+
 const AccountCreate: React.FC = () => {
-  const [showSeedInput, setShowSeedInput] = useState(false);
+  const [showInput, setShowInput] = useState(false);
   const [seedPhrase, setSeedPhrase] = useState("");
-  //   const [key, setKey] = useState("");
-  const [accountData, setAccountData] = useState<AccountData | null>(null);
+  const [account, setAccount] = useState<Account | null>(null);
 
   const createAccount = () => {
     // Add your create account logic here
-    const keys = generateKeys();
-    console.log("Account created!", keys);
-    // setKey(keys.seedPhrase);
-    setAccountData(keys);
+    const account = generateAccount();
+    console.log("Account created!", account);
+    setSeedPhrase(account.seedPhrase);
+    setAccount(account.account);
   };
 
-  const recoverAccount = () => {
-    setShowSeedInput(true);
+  const showInputFunction = () => {
+    setShowInput(true);
   };
 
   const handleSeedPhraseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,21 +31,20 @@ const AccountCreate: React.FC = () => {
 
   const handleSeedPhraseSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // setSeedPhrase(seedPhrase);
-    // Call generateKeys function here with the seedPhrase
-    const recovery = generateKeys(seedPhrase);
-    console.log("Recovery", recovery);
-    setAccountData(recovery);
+    const account = generateAccount(seedPhrase);
+    console.log("Recovery", account);
+    setSeedPhrase(account.seedPhrase);
+    setAccount(account.account);
   };
   useEffect(() => {
-    generateKeys(
+    generateAccount(
       "cake element fiber torch cactus faith attitude album surround provide rib display"
     );
   }, []);
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-md shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-4">Account Creation</h2>
+      <h2 className="text-2xl font-bold mb-4">Pixel Web3 Wallet</h2>
       <button
         onClick={createAccount}
         className="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
@@ -52,18 +52,17 @@ const AccountCreate: React.FC = () => {
         Create Account
       </button>
       <button
-        onClick={recoverAccount}
+        onClick={showInputFunction}
         className="text-gray-900 bg-gradient-to-r from-lime-200 via-lime-400 to-lime-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-lime-300 dark:focus:ring-lime-800 shadow-lg shadow-lime-500/50 dark:shadow-lg dark:shadow-lime-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
       >
         Recover Account
       </button>
-      {showSeedInput && (
+      {showInput && (
         <form onSubmit={handleSeedPhraseSubmit} className="flex m-2">
           <input
             type="text"
             value={seedPhrase}
             onChange={handleSeedPhraseChange}
-            // className="w-full px-4 py-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
             className="bg-transparent border border-gray-300 rounded-md w-full py-2 px-4 placeholder-gray-400 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mr-2"
             placeholder="Enter your text"
           />
@@ -75,21 +74,23 @@ const AccountCreate: React.FC = () => {
           </button>
         </form>
       )}
-      <p className="text-gray-600 mt-2">
-        A/C Address:{" "}
-        <span className="text-gray-900 font-medium">
-          {accountData?.address}
-        </span>
-      </p>
 
-      <p className="text-gray-600 mt-2">
-        Your 12 Phrase Mnemonic:{" "}
-        <span className="text-gray-900 font-medium">
-          {accountData?.seedPhrase}
-        </span>
-      </p>
+      <div>
+        <p className=" text-gray-900 font-medium">A/C Address: </p>
+        <span className="text-gray-600 mt-2">{account?.address}</span>
+      </div>
+
+      <div>
+        <p className="text-gray-900  font-medium">Your 12 Phrase Mnemonic: </p>
+        <span className="text-gray-600 text-normal">{seedPhrase}</span>
+      </div>
+
+      <hr />
+      {account && <AccountDetails account={account} />}
     </div>
   );
 };
 
 export default AccountCreate;
+
+//text-gray-600 mt-2
