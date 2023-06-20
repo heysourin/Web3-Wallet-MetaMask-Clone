@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { generateAccount } from "../../utils/AccountUtils";
+import { generateAccount } from "../wallet-utils/AccountUtils";
 import AccountDetails from "./AccountDetails";
+import TransactionDetails from "./TransactionDetails";
 
 interface Account {
   privateKey: string;
@@ -14,8 +15,7 @@ const AccountCreate: React.FC = () => {
   const [account, setAccount] = useState<Account | null>(null);
 
   const createAccount = () => {
-    // Add your create account logic here
-    const account = generateAccount();
+    const account = generateAccount();// account object contains--> address, privateKey, seedPhrase, balance
     console.log("Account created!", account);
     setSeedPhrase(account.seedPhrase);
     setAccount(account.account);
@@ -36,15 +36,11 @@ const AccountCreate: React.FC = () => {
     setSeedPhrase(account.seedPhrase);
     setAccount(account.account);
   };
-  useEffect(() => {
-    generateAccount(
-      "cake element fiber torch cactus faith attitude album surround provide rib display"
-    );
-  }, []);
+ 
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-md shadow-md p-6">
-      <h2 className="text-2xl font-bold mb-4">Pixel Web3 Wallet</h2>
+      <h2 className="text-2xl font-bold mb-4">Pixel Web3 Wallet on Polygon Mumbai</h2>
       <button
         onClick={createAccount}
         className="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
@@ -87,6 +83,7 @@ const AccountCreate: React.FC = () => {
 
       <hr />
       {account && <AccountDetails account={account} />}
+      {account && <TransactionDetails address={account.address} />}
     </div>
   );
 };

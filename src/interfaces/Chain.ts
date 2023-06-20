@@ -9,14 +9,14 @@ export const mumbai: Chain = {
     chainId: '80001',
     name: 'Polygon Testnet Mumbai',
     blockExplorerUrl: 'https://mumbai.polygonscan.com ',
-    rpcUrl: 'https://polygon-mumbai.g.alchemy.com/v2/mpvjvqD4pWuqbecrNS04vl',
+    rpcUrl: '<YOUR-RPC-URL>',
 };
 
 export const mainnet: Chain = {
     chainId: '1',
     name: 'Ethereum',
     blockExplorerUrl: 'https://etherscan.io',
-    rpcUrl: 'https://mainnet.infura.io/v3/a7a636ee4960455',
+    rpcUrl: '<YOUR-RPC-URL>',
 };
 
 export const CHAINS_CONFIG = {

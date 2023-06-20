@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Account } from "../../models/Account";
+import { Account } from "../interfaces/Account";
 import { ethers } from "ethers";
-import { mumbai } from "../../models/Chain";
-import { toFixedIfNecessary } from "../../utils/AccountUtils";
-import { sendToken } from "../../utils/TransactionUtils";
-import AccountTransactions from "./AccountTransactions";
+import { mumbai } from "../interfaces/Chain";
+import { sendToken } from "../wallet-utils/TransactionUtils";
 
 interface AccountDetailProps {
   account: Account;
 }
-// interface Account {
-//   privateKey: string;
-//   address: string;
-//   balance: string;
-// }
+
 const AccountDetails: React.FC<AccountDetailProps> = ({ account }) => {
   const [destinationAddress, setDestinationAddress] = useState("");
   const [amount, setAmount] = useState(0);
@@ -26,14 +20,20 @@ const AccountDetails: React.FC<AccountDetailProps> = ({ account }) => {
     message: "",
   });
 
+  const fetchData = async () => {
+    const provider = new ethers.providers.JsonRpcProvider(mumbai.rpcUrl);
+    let accountBalance = await provider.getBalance(account.address);
+    setBalance(
+      String(formatEthFunc(ethers.utils.formatEther(accountBalance)))
+      // String(accountBalance)
+    );
+  };
+
+  function formatEthFunc(value: string, decimalPlaces: number = 2) {
+    return +parseFloat(value).toFixed(decimalPlaces);
+  }
+
   useEffect(() => {
-    const fetchData = async () => {
-      const provider = new ethers.providers.JsonRpcProvider(mumbai.rpcUrl);
-      let accountBalance = await provider.getBalance(account.address);
-      setBalance(
-        String(toFixedIfNecessary(ethers.utils.formatEther(accountBalance)))
-      );
-    };
     fetchData();
   }, [account.address]);
 
@@ -161,8 +161,6 @@ const AccountDetails: React.FC<AccountDetailProps> = ({ account }) => {
           )}
         </>
       )}
-
-      <AccountTransactions account={account} />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { ethers, Wallet } from "ethers";
-import { CHAINS_CONFIG, mumbai } from "../models/Chain";
+import { CHAINS_CONFIG, mumbai } from "../interfaces/Chain";
 
 export async function sendToken(
   amount: number,
